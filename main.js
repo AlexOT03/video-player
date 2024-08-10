@@ -15,11 +15,26 @@ const volumeRange = videoPlayer.querySelector('.volume-range');
 const currentTime = videoPlayer.querySelector('.current');
 const totalTime = videoPlayer.querySelector('.total');
 const autoPlay = videoPlayer.querySelector('.auto-play');
+const captionsBtn = videoPlayer.querySelector('.captions-btn');
 const settingsBtn = videoPlayer.querySelector('.settings-btn');
 const pictureInPicture = videoPlayer.querySelector('.picture-in-picture');
 const fullscreen = videoPlayer.querySelector('.fullscreen');
 const settings = videoPlayer.querySelector('#settings');
+const captions = videoPlayer.querySelector('#captions');
+const captionLabels = videoPlayer.querySelector('#captions ul');
 const playback = videoPlayer.querySelectorAll('.playback li');
+const tracks = mainVideo.querySelectorAll('track');
+
+if (tracks.length != 0) {
+    captionLabels.insertAdjacentHTML('afterbegin', '<li data-track="off" class="active">OFF</li>');
+    let trackLi = '';
+    tracks.forEach((track) => {
+        trackLi += `<li data-track="${track.srclang}">${track.label}</li>`;
+        captionLabels.insertAdjacentHTML('beforeend', trackLi);
+    });
+}
+
+const captionTracks = captions.querySelectorAll('ul li');
 
 mainVideo.addEventListener('loadeddata', () => {
     setInterval(() => {
@@ -223,21 +238,26 @@ fullscreen.addEventListener('click', () => {
 settingsBtn.addEventListener('click', () => {
     settings.classList.toggle('active');
     settingsBtn.classList.toggle('active');
+
+    if (captionsBtn.classList.contains('active') || captions.classList.contains('active')) {
+        captions.classList.remove('active');
+        captionsBtn.classList.remove('active');
+    }
 });
 
 
 playback.forEach((event) => {
     event.addEventListener('click', () => {
-        removeSettings();
+        removeSettingsClass(playback);
         event.classList.add('active');
         let speed = event.getAttribute('data-speed');
         mainVideo.playbackRate = speed;
     });
 });
 
-
-function removeSettings() {
-    playback.forEach(event => {
+// create a generic function to remove settings
+function removeSettingsClass(element) {
+    element.forEach(event => {
         event.classList.remove('active');
     });
 }
@@ -277,7 +297,7 @@ videoPlayer.addEventListener('mouseover', () => {
 
 videoPlayer.addEventListener('mouseleave', () => {
     if (videoPlayer.classList.contains('pause')) {
-        if (settingsBtn.classList.contains('active')) {
+        if (settingsBtn.classList.contains('active') || captionsBtn.classList.contains('active')) {
             controls.classList.add('active');
         } else {
             controls.classList.remove('active');
@@ -304,3 +324,47 @@ videoPlayer.addEventListener('touchmove', () => {
         controls.classList.add('active');
     }
 });
+
+captionsBtn.addEventListener('click', () => {
+    captions.classList.toggle('active');
+    captionsBtn.classList.toggle('active');
+
+    if (settingsBtn.classList.contains('active') || settings.classList.contains('active')) {
+        settings.classList.remove('active');
+        settingsBtn.classList.remove('active');
+    }
+});
+
+captionTracks.forEach((event) => {
+    event.addEventListener('click', () => {
+        removeSettingsClass(captionTracks);
+        event.classList.add('active');
+        changeCaption(event);
+    });
+});
+
+let textTrackList = mainVideo.textTracks;
+
+function changeCaption(element) {
+    let track = element.getAttribute('data-track');
+    for (let i = 0; i < textTrackList.length; i++) {
+        textTrackList[i].mode = 'disabled';
+        if (textTrackList[i].language == track) {
+            textTrackList[i].mode = 'showing';
+        }
+    }
+}
+
+let captionText = videoPlayer.querySelector('.caption-text');
+for (let i = 0; i < textTrackList.length; i++) {
+    textTrackList[i].addEventListener('cuechange', () => {
+        if (textTrackList[i].mode == 'showing') {
+            if (textTrackList[i].activeCues[0]) {
+                let span = `<span><mark>${textTrackList[i].activeCues[0].text}</mark></span>`;
+                captionText.innerHTML = span;
+            } else {
+                captionText.innerHTML = '';
+            }
+        }
+    });
+}

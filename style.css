@@ -41,6 +41,10 @@ section {
     overflow: hidden;
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.24);
 
+    & video::cue {
+        opacity: 0;
+    }
+
     & #main-video {
         position: relative;
         width: 100%;
@@ -48,6 +52,24 @@ section {
         outline: none;
 
     }
+
+    & .caption-text {
+        position: absolute;
+        left: 50%;
+        bottom: 10%;
+        width: 90%;
+        max-width: 90%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        user-select: none;
+        transition: bottom .3s;
+    }
+
+    & .caption-text.active {
+        bottom: 0%;
+    }
+
+
 
     & .progress-area-time {
         position: absolute;
@@ -241,13 +263,13 @@ section {
                 left: 15px;
             }
 
-            & .settings-btn {
+            & .settings-btn, .captions-btn {
                 font-size: 24px;
                 transition: .3s;
 
             }
 
-            & .settings-btn.active {
+            & .settings-btn.active{
                 transform: rotate(45deg);
             }
         }
@@ -317,16 +339,67 @@ section {
         }
     }
 
-    & #settings.active {
+    & #captions {
+        position: absolute;
+        right: 25px;
+        bottom: 62px;
+        background: rgb(28 28 28 / 90%);
+        width: 200px;
+        height: auto;
+        max-height: 180px;
+        color: white;
+        overflow-y: scroll;
+        z-index: 20;
+        display: none;
+
+        & .caption {
+            & span {
+                font-size: 14px;
+                font-weight: 300;
+                padding: 15px 30px;
+                display: block;
+                border-bottom: 1px solid rgb(83, 83, 83);
+            }
+
+            & ul {
+                position: relative;
+
+                & li {
+                    position: relative;
+                    width: 100%;
+                    cursor: pointer;
+                    padding: 12px 33px;
+                    display: block;
+                    text-align: left;
+                }
+
+                & li:hover {
+                    background: rgba(28, 28, 28, 0.9);
+                }
+
+                & li.active::before {
+                    content: '\ea5e';
+                    position: absolute;
+                    left: 7px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    padding-right: 10px;
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+
+    & #settings.active, #captions.active {
         display: block;
     }
 
-    & #settings::-webkit-scrollbar {
+    & #settings::-webkit-scrollbar, #captions::-webkit-scrollbar {
         width: 8px;
         background: transparent;
     }
 
-    & #settings::-webkit-scrollbar-thumb {
+    & #settings::-webkit-scrollbar-thumb, #captions::-webkit-scrollbar-thumb {
         height: 20px;
         border: 2px solid transparent;
         background: rgba(83, 83, 83, 0.9);
