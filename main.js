@@ -27,11 +27,12 @@ const tracks = mainVideo.querySelectorAll('track');
 
 if (tracks.length != 0) {
     captionLabels.insertAdjacentHTML('afterbegin', '<li data-track="off" class="active">OFF</li>');
-    let trackLi = '';
     tracks.forEach((track) => {
-        trackLi += `<li data-track="${track.srclang}">${track.label}</li>`;
+        var trackLi = `<li data-track="${track.srclang}">${track.label}</li>`;
         captionLabels.insertAdjacentHTML('beforeend', trackLi);
     });
+} else {
+    captionLabels.insertAdjacentHTML('afterbegin', '<li>No available</li>');
 }
 
 const captionTracks = captions.querySelectorAll('ul li');
@@ -255,6 +256,53 @@ playback.forEach((event) => {
     });
 });
 
+
+captionsBtn.addEventListener('click', () => {
+    captions.classList.toggle('active');
+    captionsBtn.classList.toggle('active');
+
+    if (settingsBtn.classList.contains('active') || settings.classList.contains('active')) {
+        settings.classList.remove('active');
+        settingsBtn.classList.remove('active');
+    }
+});
+
+captionTracks.forEach((event) => {
+    event.addEventListener('click', () => {
+        removeSettingsClass(captionTracks);
+        event.classList.add('active');
+        changeCaption(event);
+        captionText.innerHTML = '';
+    });
+});
+
+let textTrackList = mainVideo.textTracks;
+
+function changeCaption(element) {
+    let track = element.getAttribute('data-track');
+    for (let i = 0; i < textTrackList.length; i++) {
+        textTrackList[i].mode = 'disabled';
+        if (textTrackList[i].language == track) {
+            textTrackList[i].mode = 'showing';
+        }
+    }
+}
+
+
+let captionText = videoPlayer.querySelector('.caption-text');
+for (let i = 0; i < textTrackList.length; i++) {
+    textTrackList[i].addEventListener('cuechange', () => {
+        if (textTrackList[i].mode == 'showing') {
+            if (textTrackList[i].activeCues[0]) {
+                let span = `<span><mark>${textTrackList[i].activeCues[0].text}</mark></span>`;
+                captionText.innerHTML = span;
+            } else {
+                captionText.innerHTML = '';
+            }
+        }
+    });
+}
+
 // create a generic function to remove settings
 function removeSettingsClass(element) {
     element.forEach(event => {
@@ -290,8 +338,11 @@ mainVideo.addEventListener('contextmenu', (e) => {
 });
 
 
-videoPlayer.addEventListener('mouseover', () => {
+videoPlayer.addEventListener('mouseenter', () => {
     controls.classList.add('active');
+    if (tracks.length != 0) {
+        captionText.classList.remove('active');
+    }
 });
 
 
@@ -301,11 +352,27 @@ videoPlayer.addEventListener('mouseleave', () => {
             controls.classList.add('active');
         } else {
             controls.classList.remove('active');
+            if (tracks.length != 0) {
+                captionText.classList.add('active');
+            }
         }
     } else {
         controls.classList.add('active');
     }
 });
+
+if (videoPlayer.classList.contains('pause')) {
+    if (settingsBtn.classList.contains('active') || captionsBtn.classList.contains('active')) {
+        controls.classList.add('active');
+    } else {
+        controls.classList.remove('active');
+        if (tracks.length != 0) {
+            captionText.classList.add('active');
+        }
+    }
+} else {
+    controls.classList.add('active');
+}
 
 
 videoPlayer.addEventListener('touchstart', () => {
@@ -313,58 +380,20 @@ videoPlayer.addEventListener('touchstart', () => {
 
     setTimeout(() => {
         controls.classList.remove('active');
-    }, 3000);
+        if (tracks.length != 0) {
+            captionText.classList.remove('active');
+        }
+    }, 8000);
 });
 
 
 videoPlayer.addEventListener('touchmove', () => {
     if (videoPlayer.classList.contains('pause')) {
         controls.classList.remove('active');
+        if (tracks.length != 0) {
+            captionText.classList.add('active');
+        }
     } else {
         controls.classList.add('active');
     }
 });
-
-captionsBtn.addEventListener('click', () => {
-    captions.classList.toggle('active');
-    captionsBtn.classList.toggle('active');
-
-    if (settingsBtn.classList.contains('active') || settings.classList.contains('active')) {
-        settings.classList.remove('active');
-        settingsBtn.classList.remove('active');
-    }
-});
-
-captionTracks.forEach((event) => {
-    event.addEventListener('click', () => {
-        removeSettingsClass(captionTracks);
-        event.classList.add('active');
-        changeCaption(event);
-    });
-});
-
-let textTrackList = mainVideo.textTracks;
-
-function changeCaption(element) {
-    let track = element.getAttribute('data-track');
-    for (let i = 0; i < textTrackList.length; i++) {
-        textTrackList[i].mode = 'disabled';
-        if (textTrackList[i].language == track) {
-            textTrackList[i].mode = 'showing';
-        }
-    }
-}
-
-let captionText = videoPlayer.querySelector('.caption-text');
-for (let i = 0; i < textTrackList.length; i++) {
-    textTrackList[i].addEventListener('cuechange', () => {
-        if (textTrackList[i].mode == 'showing') {
-            if (textTrackList[i].activeCues[0]) {
-                let span = `<span><mark>${textTrackList[i].activeCues[0].text}</mark></span>`;
-                captionText.innerHTML = span;
-            } else {
-                captionText.innerHTML = '';
-            }
-        }
-    });
-}
