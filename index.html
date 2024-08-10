@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div id="video-player">
+                <video src="./videos/Video Test 2K Samsung.mp4" id="main-video"></video>
+                <div class="progress-area-time">0:00</div>
+                <div class="controls">
+                    <div class="progress-area">
+                        <div class="progress-bar">
+                            <span></span>
+                        </div>
+                        <div class="buffered-progress-bar"></div>
+                    </div>
+                    <div class="controls-list">
+                        <div class="controls-left">
+                            <span class="icon">
+                                <i class="ti ti-rewind-backward-10 fast-rewind"></i>
+                            </span>
+                            <span class="icon">
+                                <i class="ti ti-player-play play-pause"></i>
+                            </span>
+                            <span class="icon">
+                                <i class="ti ti-rewind-forward-10 fast-forward"></i>
+                            </span>
+                            <span class="icon">
+                                <i class="ti ti-volume volume"></i>
+                                <input type="range" min="0" max="100" class="volume-range">
+                            </span>
+                            <div class="timer">
+                                <span class="current">0:00</span> / <span class="total">0:00</span>
+                            </div>
+                        </div>
+                        <div class="controls-right">
+                            <span class="icon">
+                                <i class="ti ti-player-play auto-play" title="Autoplay Disabled"></i>
+                            </span>
+                            <span class="icon">
+                                <i class="ti ti-badge-cc subtitles"></i>
+                            </span>
+                            <span class="icon">
+                                <i class="ti ti-settings settings-btn"></i>
+                            </span>
+                            <span class="icon">
+                                <i class="ti ti-picture-in-picture picture-in-picture"></i>
+                            </span>
+                            <span class="icon">
+                                <i class="ti ti-maximize fullscreen"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div id="settings">
+                    <div class="playback">
+                        <span>playback speed</span>
+                        <ul>
+                            <li data-speed="0.25">0.25x</li>
+                            <li data-speed="0.5">0.5x</li>
+                            <li data-speed="0.75">0.75x</li>
+                            <li data-speed="1">Normal</li>
+                            <li data-speed="1.25">1.25x</li>
+                            <li data-speed="1.5">1.5x</li>
+                            <li data-speed="1.75">1.75x</li>
+                            <li data-speed="2">2x</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script defer src="main.js"></script>
+</body>
+</html>
