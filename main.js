@@ -3,6 +3,7 @@ $ = el => document.querySelector(el);
 const videoPlayer = $('#video-player');
 const mainVideo = videoPlayer.querySelector('#main-video');
 const progressAreaTime = videoPlayer.querySelector('.progress-area-time');
+const detailsPanel = videoPlayer.querySelector('.details-panel');
 const controls = videoPlayer.querySelector('.controls');
 const progressArea = videoPlayer.querySelector('.progress-area');
 const progressBar = progressArea.querySelector('.progress-bar');
@@ -88,6 +89,7 @@ mainVideo.addEventListener('pause', () => {
 mainVideo.onended = () => {
     if (!autoPlay.classList.contains('active')) {
         controls.classList.add('active');
+        detailsPanel.classList.add('active');
     }
 };
 
@@ -480,6 +482,7 @@ mainVideo.addEventListener('contextmenu', (e) => {
 
 videoPlayer.addEventListener('mouseenter', () => {
     controls.classList.add('active');
+    detailsPanel.classList.add('active');
     if (tracks.length != 0) {
         captionText.classList.remove('active');
     }
@@ -490,36 +493,44 @@ videoPlayer.addEventListener('mouseleave', () => {
     if (videoPlayer.classList.contains('pause')) {
         if (settingsBtn.classList.contains('active') || captionsBtn.classList.contains('active')) {
             controls.classList.add('active');
+            detailsPanel.classList.add('active');
         } else {
             controls.classList.remove('active');
+            detailsPanel.classList.remove('active');
             if (tracks.length != 0) {
                 captionText.classList.add('active');
             }
         }
     } else {
         controls.classList.add('active');
+        detailsPanel.classList.add('active');
     }
 });
 
 if (videoPlayer.classList.contains('pause')) {
     if (settingsBtn.classList.contains('active') || captionsBtn.classList.contains('active')) {
         controls.classList.add('active');
+        detailsPanel.classList.add('active');
     } else {
         controls.classList.remove('active');
+        detailsPanel.classList.remove('active');
         if (tracks.length != 0) {
             captionText.classList.add('active');
         }
     }
 } else {
     controls.classList.add('active');
+    detailsPanel.classList.add('active');
 }
 
 
 videoPlayer.addEventListener('touchstart', () => {
     controls.classList.add('active');
+    detailsPanel.classList.add('active');
 
     setTimeout(() => {
         controls.classList.remove('active');
+        detailsPanel.classList.remove('active');
         if (tracks.length != 0) {
             captionText.classList.remove('active');
         }
@@ -530,11 +541,13 @@ videoPlayer.addEventListener('touchstart', () => {
 videoPlayer.addEventListener('touchmove', () => {
     if (videoPlayer.classList.contains('pause')) {
         controls.classList.remove('active');
+        detailsPanel.classList.remove('active');
         if (tracks.length != 0) {
             captionText.classList.add('active');
         }
     } else {
         controls.classList.add('active');
+        detailsPanel.classList.add('active');
     }
 });
 

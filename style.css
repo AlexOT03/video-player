@@ -45,6 +45,36 @@ section {
         opacity: 0;
     }
 
+    & .details-panel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        padding: 15px 25px;
+        background: linear-gradient(to bottom, #000000ef 35%, transparent);
+        transform: translateY(-100%);
+        transition: .3s;
+        z-index: 2;
+
+        & p {
+            font-size: 16px;
+            font-weight: 300;
+            margin-bottom: 1px;
+            color: white;
+        }
+
+        & span {
+            font-size: 12px;
+            font-weight: 200;
+            color: #c7c7c7;
+        }
+    }
+
+    & .details-panel.active {
+        transform: translateY(0);
+    }
+
     & .spinner {
         position: absolute;
         top: 50%;
