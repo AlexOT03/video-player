@@ -567,58 +567,30 @@ previewVideo.controls = true;
 previewVideo.src = mainVideo.querySelector('source').src;
 
 previewVideo.addEventListener('loadeddata', async function () {
-    //
     previewVideo.pause();
-
-    //
     var count = 1;
-
-    //
     var id = 1;
-
-    //
     var x = 0, y = 0;
-
-    //
     var array = [];
-
-    //
     var duration = parseInt(previewVideo.duration);
 
-    //
     for (var i = 1; i <= duration; i++) {
         array.push(i);
     }
 
-    //
     var canvas;
-
-    //
     var i, j;
 
     for (i = 0, j = array.length; i < j; i += horizontalItemCount) {
-        //
         for (var startIndex of array.slice(i, i + horizontalItemCount)) {
-            //
             var backgroundPositionX = x * thumbnailWidth;
-
-            //
             var backgroundPositionY = y * thumbnailHeight;
-
-            //
             var item = thumbnails.find(x => x.id === id);
 
             if (!item) {
-                // 
-
-                //
                 canvas = document.createElement('canvas');
-
-                //
                 canvas.width = thumbnailWidth * horizontalItemCount;
                 canvas.height = thumbnailHeight * verticalItemCount;
-
-                //
                 thumbnails.push({
                     id: id,
                     canvas: canvas,
@@ -629,84 +601,41 @@ previewVideo.addEventListener('loadeddata', async function () {
                     }]
                 });
             } else {
-                //
-
-                //
                 canvas = item.canvas;
-
-                //
                 item.sec.push({
                     index: startIndex,
                     backgroundPositionX: -backgroundPositionX,
                     backgroundPositionY: -backgroundPositionY
                 });
             }
-
-            //
             var context = canvas.getContext('2d');
-
-            //
             previewVideo.currentTime = startIndex;
 
-            //
             await new Promise(function (resolve) {
                 var event = function () {
-                    //
+        
                     context.drawImage(previewVideo, backgroundPositionX, backgroundPositionY,
                         thumbnailWidth, thumbnailHeight);
-
-                    //
                     x++;
-
-                    // removing duplicate events
                     previewVideo.removeEventListener('canplay', event);
-
-                    // 
                     resolve();
                 };
-
-                // 
                 previewVideo.addEventListener('canplay', event);
             });
-
-
-            // 1 thumbnail is generated completely
             count++;
         }
-
-        // reset x coordinate
         x = 0;
-
-        // increase y coordinate
         y++;
 
-        // checking for overflow
         if (count > horizontalItemCount * verticalItemCount) {
-            //
             count = 1;
-
-            //
             x = 0;
-
-            //
             y = 0;
-
-            //
             id++;
         }
-
     }
-    
-    // looping through thumbnail list to update thumbnail
     thumbnails.forEach(function (item) {
-        // converting canvas to blob to get short url
         item.canvas.toBlob(blob => item.data = URL.createObjectURL(blob), 'image/jpeg');
-
-        // deleting unused property
         delete item.canvas;
     });
-
-
-
-    console.log('done...');
 });
