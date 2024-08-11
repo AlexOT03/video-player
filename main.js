@@ -6,7 +6,7 @@ const progressAreaTime = videoPlayer.querySelector('.progress-area-time');
 const controls = videoPlayer.querySelector('.controls');
 const progressArea = videoPlayer.querySelector('.progress-area');
 const progressBar = progressArea.querySelector('.progress-bar');
-const bufferedProgressBar = progressArea.querySelector('.buffered-progress-bar');
+const bufferedBar = progressArea.querySelector('.buffered-bar');
 const fastRewind = videoPlayer.querySelector('.fast-rewind');
 const playPause = videoPlayer.querySelector('.play-pause');
 const fastForward = videoPlayer.querySelector('.fast-forward');
@@ -17,6 +17,7 @@ const totalTime = videoPlayer.querySelector('.total');
 const autoPlay = videoPlayer.querySelector('.auto-play');
 const captionsBtn = videoPlayer.querySelector('.captions-btn');
 const settingsBtn = videoPlayer.querySelector('.settings-btn');
+const settingsHome = videoPlayer.querySelectorAll('#settings [data-label="settings-home"] > ul > li');
 const pictureInPicture = videoPlayer.querySelector('.picture-in-picture');
 const fullscreen = videoPlayer.querySelector('.fullscreen');
 const settings = videoPlayer.querySelector('#settings');
@@ -39,14 +40,14 @@ if (tracks.length != 0) {
 
 const captionTracks = captions.querySelectorAll('ul li');
 
-mainVideo.addEventListener('loadeddata', () => {
-    setInterval(() => {
-        let bufferedTime = mainVideo.buffered.end(0);
-        let duration = mainVideo.duration;
-        let widthVal = (bufferedTime / duration) * 100;
-        bufferedProgressBar.style.width = `${widthVal}%`;
-    }, 500);
-});
+// mainVideo.addEventListener('loadeddata', () => {
+//     setInterval(() => {
+//         let bufferedTime = mainVideo.buffered.end(0);
+//         let duration = mainVideo.duration;
+//         let widthVal = (bufferedTime / duration) * 100;
+//         bufferedProgressBar.style.width = `${widthVal}%`;
+//     }, 500);
+// });
 
 
 function playVideo() {
@@ -150,6 +151,27 @@ function setTimelinePosition(e) {
     currentSec < 10 ? currentSec = '0' + currentSec : currentSec;
     currentTime.innerHTML = `${currentMin}:${currentSec}`;
 }
+
+
+function drawProgress(canvas, buffered, duration) {
+    let context = canvas.getContext('2d', { antialias: false });
+    context.fillStyle = '#ffffffe6';
+
+    let height = canvas.height;
+    let width = canvas.width;
+
+    if (!height || !width) throw "Canvas is not defined";
+    context.clearRect(0, 0, width, height);
+    for (let i = 0; i < buffered.length; i++) {
+        let leadingEdge = buffered.start(i) / duration * width;
+        let trailingEdge = buffered.end(i) / duration * width;
+        context.fillReac(leadingEdge, 0 , trailingEdge - leadingEdge, height);
+    }
+}
+
+mainVideo.addEventListener('progress', () => {
+    drawProgress(bufferedBar, mainVideo.buffered, mainVideo.duration);
+});
 
 
 mainVideo.addEventListener('waiting', () => {
@@ -310,7 +332,7 @@ settingsBtn.addEventListener('click', () => {
 
 playback.forEach((event) => {
     event.addEventListener('click', () => {
-        removeSettingsClass(playback);
+        removeActiveClass(playback);
         event.classList.add('active');
         let speed = event.getAttribute('data-speed');
         mainVideo.playbackRate = speed;
@@ -330,7 +352,7 @@ captionsBtn.addEventListener('click', () => {
 
 captionTracks.forEach((event) => {
     event.addEventListener('click', () => {
-        removeSettingsClass(captionTracks);
+        removeActiveClass(captionTracks);
         event.classList.add('active');
         changeCaption(event);
         captionText.innerHTML = '';
@@ -364,8 +386,65 @@ for (let i = 0; i < textTrackList.length; i++) {
     });
 }
 
+const settingsDivs = videoPlayer.querySelectorAll('#settings > div');
+const settingsBack = videoPlayer.querySelectorAll('#settings > div .back-arrow');
+const qualityUl = videoPlayer.querySelector('#settings > [data-label="quality"] > ul');
+const qualitys = videoPlayer.querySelectorAll("source[size]");
+
+
+qualitys.forEach((event) => {
+    let qualityHtml = `<li data-quality="${event.getAttribute('size')}">${event.getAttribute('size')}p</li>`;
+    qualityUl.insertAdjacentHTML('afterbegin', qualityHtml);
+});
+
+const qualityLi = videoPlayer.querySelectorAll('#settings > [data-label="quality"] > ul > li');
+qualityLi.forEach((event) => {
+    event.addEventListener('click', (e) => {
+        let quality = event.getAttribute('data-quality');
+        removeActiveClass(qualityLi);
+        event.classList.add('active');
+        qualitys.forEach((source) => {
+            if (source.getAttribute('size') == quality) {
+                let videoDuration = mainVideo.currentTime;
+                let videoSrc = source.getAttribute('src');
+                mainVideo.src = videoSrc;
+                mainVideo.currentTime = videoDuration;
+                playVideo();
+            }
+        });
+    });
+});
+
+
+settingsBack.forEach((event) => {
+    event.addEventListener('click', (e) => {
+        let settingsLabel = e.target.getAttribute('data-label');
+        for (let i = 0; i < settingsDivs.length; i++) {
+            if(settingsDivs[i].getAttribute('data-label') == settingsLabel) {
+                settingsDivs[i].removeAttribute('hidden');
+            } else { 
+                settingsDivs[i].setAttribute('hidden', '');
+            }
+        }
+    });
+});
+
+
+settingsHome.forEach((event) => {
+    event.addEventListener('click', (e) => {
+        let settingsLabel = e.target.getAttribute('data-label');
+        for (let i = 0; i < settingsDivs.length; i++) {
+            if(settingsDivs[i].getAttribute('data-label') == settingsLabel) {
+                settingsDivs[i].removeAttribute('hidden');
+            } else { 
+                settingsDivs[i].setAttribute('hidden', '');
+            }
+        }
+    });
+});
+
 // create a generic function to remove settings
-function removeSettingsClass(element) {
+function removeActiveClass(element) {
     element.forEach(event => {
         event.classList.remove('active');
     });

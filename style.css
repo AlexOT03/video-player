@@ -137,6 +137,7 @@ section {
             margin: auto;
             background: #f0f0f07c;
             cursor: pointer;
+            position: relative;
 
             & .progress-bar {
                 position: relative;
@@ -159,15 +160,12 @@ section {
                 background: #1CC0C0;
             }
 
-            & .buffered-progress-bar {
+            & .buffered-bar {
                 position: absolute;
-                top: 0;
-                width: 0%;
+                top: 0%;
+                right: 0%;
+                width: 100%;
                 height: inherit;
-                background: rgb(206, 206, 206);
-                border-radius: inherit;
-                cursor: pointer;
-                z-index: -1;
             }
         }
 
@@ -315,19 +313,30 @@ section {
         background: rgb(28 28 28 / 90%);
         width: 200px;
         height: auto;
-        max-height: 180px;
+        max-height: 250px;
         color: white;
-        overflow-y: scroll;
+        overflow-y: auto;
         z-index: 20;
         display: none;
+        border-radius: 5px;
 
-        & .playback, & .caption {
-            & span {
+        & >div, & .caption {
+            & >span {
                 font-size: 14px;
                 font-weight: 300;
                 padding: 15px 30px;
-                display: block;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 border-bottom: 1px solid rgb(83, 83, 83);
+                white-space: nowrap;
+            }
+
+            & .icon {
+                font-size: 14px;
+                margin: 0 5px;
+                cursor: pointer;
+
             }
 
             & ul {
@@ -338,8 +347,13 @@ section {
                     width: 100%;
                     cursor: pointer;
                     padding: 12px 33px;
-                    display: block;
-                    text-align: left;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    & span {
+                        pointer-events: none;
+                    }
                 }
 
                 & li:hover {

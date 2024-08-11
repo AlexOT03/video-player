@@ -13,7 +13,9 @@
             <div id="video-player">
                 <div class="spinner"></div>
                 <video preload="metadata" id="main-video">
-                    <source src="./videos/MIB2.mp4" type="video/mp4">
+                    <source src="./videos/MIB2.mp4" size="480" type="video/mp4">
+                    <source src="./videos/MIB2.mp4" size="720" type="video/mp4">
+                    <source src="./videos/MIB2.mp4" size="1080" type="video/mp4">
                     <track id="track1" kind="subtitles" label="English" srclang="en" src="./videos/MIB2-subtitles-pt-BR-en.vtt">
                     <track id="track2" kind="subtitles" label="Spanish" srclang="es" src="./videos/MIB2-subtitles-pt-BR-es.vtt">
                 </video>
@@ -22,10 +24,10 @@
                 <div class="progress-area-time">0:00</div>
                 <div class="controls">
                     <div class="progress-area">
+                        <canvas class="buffered-bar"></canvas>
                         <div class="progress-bar">
                             <span></span>
                         </div>
-                        <div class="buffered-progress-bar"></div>
                     </div>
                     <div class="controls-list">
                         <div class="controls-left">
@@ -66,8 +68,23 @@
                     </div>
                 </div>
                 <div id="settings">
-                    <div class="playback">
-                        <span>Playback speed</span>
+                    <div data-label="settings-home">
+                        <ul>
+                            <li data-label="speed">
+                                <span>Speed</span>
+                                <i class="ti ti-chevron-right icon"></i>
+                            </li>
+                            <li data-label="quality">
+                                <span>Quality</span>
+                                <i class="ti ti-chevron-right icon"></i>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="playback" data-label="speed" hidden>
+                        <span>
+                            <i class="ti ti-chevron-left icon back-arrow" data-label="settings-home"></i>
+                            <span>Playback speed</span>
+                        </span>
                         <ul>
                             <li data-speed="0.25">0.25x</li>
                             <li data-speed="0.5">0.5x</li>
@@ -77,6 +94,15 @@
                             <li data-speed="1.5">1.5x</li>
                             <li data-speed="1.75">1.75x</li>
                             <li data-speed="2">2x</li>
+                        </ul>
+                    </div>
+                    <div data-label="quality" hidden>
+                        <span>
+                            <i class="ti ti-chevron-left icon back-arrow" data-label="settings-home"></i>
+                            <span>Select quality</span>
+                        </span>
+                        <ul>
+                            <li data-quality="auto" class="active">Auto</li>
                         </ul>
                     </div>
                 </div>
