@@ -11,12 +11,14 @@
     <section>
         <div class="container">
             <div id="video-player">
+                <div class="spinner"></div>
                 <video preload="metadata" id="main-video">
                     <source src="./videos/MIB2.mp4" type="video/mp4">
                     <track id="track1" kind="subtitles" label="English" srclang="en" src="./videos/MIB2-subtitles-pt-BR-en.vtt">
                     <track id="track2" kind="subtitles" label="Spanish" srclang="es" src="./videos/MIB2-subtitles-pt-BR-es.vtt">
                 </video>
                 <p class="caption-text"></p>
+                <div class="thumbnail"></div>
                 <div class="progress-area-time">0:00</div>
                 <div class="controls">
                     <div class="progress-area">
@@ -70,7 +72,7 @@
                             <li data-speed="0.25">0.25x</li>
                             <li data-speed="0.5">0.5x</li>
                             <li data-speed="0.75">0.75x</li>
-                            <li data-speed="1">Normal</li>
+                            <li data-speed="1" class="active">Normal</li>
                             <li data-speed="1.25">1.25x</li>
                             <li data-speed="1.5">1.5x</li>
                             <li data-speed="1.75">1.75x</li>

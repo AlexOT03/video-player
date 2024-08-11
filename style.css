@@ -76,33 +76,33 @@ section {
         color: white;
     }
 
+    & .thumbnail {
+        position: absolute;
+        bottom: 80px;
+        left: calc(var(--x) + 11px);
+        transform: translateX(-50%);
+        width: 165px;
+        height: 90px;
+        background: white;
+        border: 2px solid #fff;
+        border-radius: 3px;
+        display: none;
+    }
+
     & .progress-area-time {
         position: absolute;
-        left: var(--x);
+        left: calc(var(--x) + 11px);
         transform: translateX(-50%);
-        bottom: 60px;
-        min-width: 50px;
+        bottom: 50px;
+        min-width: 60px;
         text-align: center;
         white-space: nowrap;
         padding: 5px 10px;
         color: white;
         font-size: 14px;
-        background: #151515;
-        border-radius: 5px;
+        font-weight: 400;
         z-index: 1;
         display: none;
-    }
-
-    & .progress-area-time::before {
-        content: '';
-        position: absolute;
-        bottom: -40%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(45deg);
-        background: #151515;
-        width: 15px;
-        height: 15px;
-        z-index: -1;
     }
 
     & .controls {
@@ -128,7 +128,7 @@ section {
                 position: relative;
                 width: 100px;
                 height: inherit;
-                background: rgb(255, 174, 0);
+                background: #1CC0C0;
                 border-radius: inherit;
                 cursor: pointer;
             }
@@ -142,7 +142,7 @@ section {
                 right: -5px;
                 top: 50%;
                 transform: translateY(-50%);
-                background: rgb(255, 174, 0);
+                background: #1CC0C0;
             }
 
             & .buffered-progress-bar {
@@ -242,7 +242,7 @@ section {
                 border-radius: 20px;
                 position: relative;
                 margin-right: 8px !important;
-                background: #b6b6b6;    
+                background: #b6b6b6;
             }
 
             & .auto-play::before {

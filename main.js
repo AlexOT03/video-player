@@ -24,6 +24,7 @@ const captions = videoPlayer.querySelector('#captions');
 const captionLabels = videoPlayer.querySelector('#captions ul');
 const playback = videoPlayer.querySelectorAll('.playback li');
 const tracks = mainVideo.querySelectorAll('track');
+let thumbnail = videoPlayer.querySelector('.thumbnail');
 
 if (tracks.length != 0) {
     captionLabels.insertAdjacentHTML('afterbegin', '<li data-track="off" class="active">OFF</li>');
@@ -73,14 +74,20 @@ playPause.addEventListener('click', () => {
 });
 
 
-mainVideo.addEventListener('play', ()=> {
+mainVideo.addEventListener('play', () => {
     playVideo();
 });
 
 
-mainVideo.addEventListener('pause', ()=> {
+mainVideo.addEventListener('pause', () => {
     pauseVideo();
 });
+
+mainVideo.onended = () => {
+    if (!autoPlay.classList.contains('active')) {
+        controls.classList.add('active');
+    }
+};
 
 
 fastRewind.addEventListener('click', () => {
@@ -175,23 +182,50 @@ volume.addEventListener('click', () => {
 
 
 progressArea.addEventListener('mousemove', (e) => {
-    let progressWidthVal = progressArea.clientWidth;
+    let progressWidthVal = progressArea.clientWidth + 2;
     let offsetX = e.offsetX;
-
-    progressAreaTime.style.setProperty('--x', `${offsetX}px`);
-    progressAreaTime.style.display = 'block';
-
     let videoDuration = mainVideo.duration;
     let progressTime = Math.floor((offsetX / progressWidthVal) * videoDuration);
     let currentMin = Math.floor(progressTime / 60);
     let currentSec = Math.floor(progressTime % 60);
 
+    if (offsetX >= progressWidthVal - 100) {
+        offsetX = progressWidthVal - 100;
+    } else if (offsetX <= 80) {
+        offsetX = 80;
+    } else {
+        offsetX = e.offsetX;
+    }   
+
+    progressAreaTime.style.setProperty('--x', `${offsetX}px`);
+    progressAreaTime.style.display = 'block';
+
     currentSec < 10 ? currentSec = '0' + currentSec : currentSec;
     progressAreaTime.innerHTML = `${currentMin}:${currentSec}`;
+
+    thumbnail.style.setProperty('--x', `${offsetX}px`);
+    thumbnail.style.display = 'block';
+
+    for (var item of thumbnails) {
+        //
+        var data = item.sec.find(x1 => x1.index === Math.floor(progressTime));
+        // thumbnail found
+        if (data) {
+            if (item.data !== undefined) {
+                thumbnail.setAttribute("style", `
+                    background-image: url(${item.data}); background-position-x: ${data.backgroundPositionX}px;
+                    background-position-y: ${data.backgroundPositionY}px;--x: ${offsetX}px;display: block;
+                    `);
+                // exit
+                return;
+            }
+        }
+    }
 });
 
 
 progressArea.addEventListener('mouseleave', () => {
+    thumbnail.style.display = 'none';
     progressAreaTime.style.display = 'none';
 });
 
@@ -207,7 +241,7 @@ autoPlay.addEventListener('click', () => {
 
 
 mainVideo.addEventListener('ended', () => {
-    if (autoPlay.classList.contains('active')) {    
+    if (autoPlay.classList.contains('active')) {
         playVideo();
     } else {
         playPause.classList.remove('ti-player-play');
@@ -311,16 +345,16 @@ function removeSettingsClass(element) {
 }
 
 
-window.addEventListener('unload', ()=> {
+window.addEventListener('unload', () => {
     let setDuration = localStorage.setItem('duration', `${mainVideo.currentTime}`);
     let setPath = localStorage.setItem('src', `${mainVideo.src}`);
 });
 
 
-window.addEventListener('load', ()=> {
+window.addEventListener('load', () => {
     let getDuration = localStorage.getItem('duration');
     let getPath = localStorage.getItem('src');
-    
+
 
     if (getPath) {
         mainVideo.src = getPath;
@@ -396,4 +430,164 @@ videoPlayer.addEventListener('touchmove', () => {
     } else {
         controls.classList.add('active');
     }
+});
+
+
+var thumbnails = [];
+
+var thumbnailWidth = 158;
+var thumbnailHeight = 90;
+var horizontalItemCount = 5;
+var verticalItemCount = 5;
+
+let previewVideo = document.createElement('video');
+previewVideo.preload = 'metadata'
+previewVideo.width = 500;
+previewVideo.height = 300;
+previewVideo.controls = true;
+previewVideo.src = mainVideo.querySelector('source').src;
+
+previewVideo.addEventListener('loadeddata', async function () {
+    //
+    previewVideo.pause();
+
+    //
+    var count = 1;
+
+    //
+    var id = 1;
+
+    //
+    var x = 0, y = 0;
+
+    //
+    var array = [];
+
+    //
+    var duration = parseInt(previewVideo.duration);
+
+    //
+    for (var i = 1; i <= duration; i++) {
+        array.push(i);
+    }
+
+    //
+    var canvas;
+
+    //
+    var i, j;
+
+    for (i = 0, j = array.length; i < j; i += horizontalItemCount) {
+        //
+        for (var startIndex of array.slice(i, i + horizontalItemCount)) {
+            //
+            var backgroundPositionX = x * thumbnailWidth;
+
+            //
+            var backgroundPositionY = y * thumbnailHeight;
+
+            //
+            var item = thumbnails.find(x => x.id === id);
+
+            if (!item) {
+                // 
+
+                //
+                canvas = document.createElement('canvas');
+
+                //
+                canvas.width = thumbnailWidth * horizontalItemCount;
+                canvas.height = thumbnailHeight * verticalItemCount;
+
+                //
+                thumbnails.push({
+                    id: id,
+                    canvas: canvas,
+                    sec: [{
+                        index: startIndex,
+                        backgroundPositionX: -backgroundPositionX,
+                        backgroundPositionY: -backgroundPositionY
+                    }]
+                });
+            } else {
+                //
+
+                //
+                canvas = item.canvas;
+
+                //
+                item.sec.push({
+                    index: startIndex,
+                    backgroundPositionX: -backgroundPositionX,
+                    backgroundPositionY: -backgroundPositionY
+                });
+            }
+
+            //
+            var context = canvas.getContext('2d');
+
+            //
+            previewVideo.currentTime = startIndex;
+
+            //
+            await new Promise(function (resolve) {
+                var event = function () {
+                    //
+                    context.drawImage(previewVideo, backgroundPositionX, backgroundPositionY,
+                        thumbnailWidth, thumbnailHeight);
+
+                    //
+                    x++;
+
+                    // removing duplicate events
+                    previewVideo.removeEventListener('canplay', event);
+
+                    // 
+                    resolve();
+                };
+
+                // 
+                previewVideo.addEventListener('canplay', event);
+            });
+
+
+            // 1 thumbnail is generated completely
+            count++;
+        }
+
+        // reset x coordinate
+        x = 0;
+
+        // increase y coordinate
+        y++;
+
+        // checking for overflow
+        if (count > horizontalItemCount * verticalItemCount) {
+            //
+            count = 1;
+
+            //
+            x = 0;
+
+            //
+            y = 0;
+
+            //
+            id++;
+        }
+
+    }
+    
+    // looping through thumbnail list to update thumbnail
+    thumbnails.forEach(function (item) {
+        // converting canvas to blob to get short url
+        item.canvas.toBlob(blob => item.data = URL.createObjectURL(blob), 'image/jpeg');
+
+        // deleting unused property
+        delete item.canvas;
+    });
+
+
+
+    console.log('done...');
 });
