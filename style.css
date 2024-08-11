@@ -42,8 +42,22 @@ section {
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.24);
 
     & video::cue {
-        color: red !important;
         opacity: 0;
+    }
+
+    & .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        border: 4px solid #f3f3f3;
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        z-index: 1000;
+        animation: spin-animate .6s linear infinite;
+        display: none;
     }
 
     & #main-video {
@@ -379,5 +393,15 @@ section {
 
     .volume, .volume-range, .picture-in-picture {
         display: none;
+    }
+}
+
+@keyframes spin-animate {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
     }
 }

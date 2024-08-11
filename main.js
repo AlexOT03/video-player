@@ -24,6 +24,7 @@ const captions = videoPlayer.querySelector('#captions');
 const captionLabels = videoPlayer.querySelector('#captions ul');
 const playback = videoPlayer.querySelectorAll('.playback li');
 const tracks = mainVideo.querySelectorAll('track');
+const spinner = videoPlayer.querySelector('.spinner');
 let thumbnail = videoPlayer.querySelector('.thumbnail');
 
 if (tracks.length != 0) {
@@ -133,6 +134,15 @@ progressArea.addEventListener('click', (e) => {
     mainVideo.currentTime = (clickOffsetX / progressWidthVal) * videoDuration;
 });
 
+
+mainVideo.addEventListener('waiting', () => {
+    spinner.style.display = 'block';
+});
+
+
+mainVideo.addEventListener('canplay', () => {
+    spinner.style.display = 'none';
+});
 
 function setVolume() {
     mainVideo.volume = (volumeRange.value / 100) * (volumeRange.value / 100);
