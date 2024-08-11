@@ -121,18 +121,35 @@ mainVideo.addEventListener('timeupdate', (e) => {
 
     let videoDuration = e.target.duration;
 
-    let progressBarWidth = (currentVideoTime / videoDuration) * 100;
+    let progressBarWidth = (currentVideoTime / videoDuration) * 100 + 0.5;
     progressBar.style.width = `${progressBarWidth}%`;
 });
 
 
-progressArea.addEventListener('click', (e) => {
+progressArea.addEventListener('pointerdown', (e) => {
+    setTimelinePosition(e);
+    progressArea.addEventListener('pointermove', setTimelinePosition);
+    progressArea.addEventListener('pointerup', () => {
+        progressArea.removeEventListener('pointermove', setTimelinePosition);
+    });
+});
+
+
+function setTimelinePosition(e) {
     let videoDuration = mainVideo.duration;
     let progressWidthVal = progressArea.clientWidth;
     let clickOffsetX = e.offsetX;
-
     mainVideo.currentTime = (clickOffsetX / progressWidthVal) * videoDuration;
-});
+    
+    let progressBarWidth = (mainVideo.currentTime / videoDuration) * 100 + 0.5;
+    progressBar.style.width = `${progressBarWidth}%`;
+
+    let currentVideoTime = mainVideo.currentTime;
+    let currentMin = Math.floor(currentVideoTime / 60);
+    let currentSec = Math.floor(currentVideoTime % 60);
+    currentSec < 10 ? currentSec = '0' + currentSec : currentSec;
+    currentTime.innerHTML = `${currentMin}:${currentSec}`;
+}
 
 
 mainVideo.addEventListener('waiting', () => {
