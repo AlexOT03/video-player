@@ -100,6 +100,10 @@ section {
 
     }
 
+    & #main-video.hide-mouse {
+        cursor: none;
+    }
+
     & .caption-text {
         position: absolute;
         left: 50%;

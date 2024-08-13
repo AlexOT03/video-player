@@ -157,17 +157,16 @@ function setTimelinePosition(e) {
 
 function drawProgress(canvas, buffered, duration) {
     let context = canvas.getContext('2d', { antialias: false });
-    context.fillStyle = '#ffffffe6';
+    context.fillStyle = "#ffffffe6";
 
     let height = canvas.height;
     let width = canvas.width;
-
-    if (!height || !width) throw "Canvas is not defined";
+    if (!height || !width) throw "Canva's width or height or not set.";
     context.clearRect(0, 0, width, height);
     for (let i = 0; i < buffered.length; i++) {
         let leadingEdge = buffered.start(i) / duration * width;
         let trailingEdge = buffered.end(i) / duration * width;
-        context.fillReac(leadingEdge, 0 , trailingEdge - leadingEdge, height);
+        context.fillRect(leadingEdge, 0, trailingEdge - leadingEdge, height)
     }
 }
 
@@ -485,9 +484,11 @@ function hideControls () {
     if (mainVideo.paused) return;
         timer = setTimeout(() => {
             if (settingsBtn.classList.contains("active") || captionsBtn.classList.contains("active")) {
+                mainVideo.classList.remove("hide-mouse");
                 controls.classList.add("active");
                 detailsPanel.classList.add("active");
             } else {
+                mainVideo.classList.add("hide-mouse");
                 controls.classList.remove("active");
                 detailsPanel.classList.remove("active");
                 if (tracks.length != 0) {
@@ -501,6 +502,7 @@ hideControls();
 
 videoPlayer.addEventListener("mousemove", () => {
 
+    mainVideo.classList.remove("hide-mouse");
     controls.classList.add("active");
     detailsPanel.classList.add("active");
     if (tracks.length != 0) {
@@ -509,78 +511,6 @@ videoPlayer.addEventListener("mousemove", () => {
     clearTimeout(timer);
     hideControls();
 });
-
-
-// videoPlayer.addEventListener('mouseenter', () => {
-//     controls.classList.add('active');
-//     detailsPanel.classList.add('active');
-//     if (tracks.length != 0) {
-//         captionText.classList.remove('active');
-//     }
-// });
-
-
-// videoPlayer.addEventListener('mouseleave', () => {
-//     if (videoPlayer.classList.contains('pause')) {
-//         if (settingsBtn.classList.contains('active') || captionsBtn.classList.contains('active')) {
-//             controls.classList.add('active');
-//             detailsPanel.classList.add('active');
-//         } else {
-//             controls.classList.remove('active');
-//             detailsPanel.classList.remove('active');
-//             if (tracks.length != 0) {
-//                 captionText.classList.add('active');
-//             }
-//         }
-//     } else {
-//         controls.classList.add('active');
-//         detailsPanel.classList.add('active');
-//     }
-// });
-
-// if (videoPlayer.classList.contains('pause')) {
-//     if (settingsBtn.classList.contains('active') || captionsBtn.classList.contains('active')) {
-//         controls.classList.add('active');
-//         detailsPanel.classList.add('active');
-//     } else {
-//         controls.classList.remove('active');
-//         detailsPanel.classList.remove('active');
-//         if (tracks.length != 0) {
-//             captionText.classList.add('active');
-//         }
-//     }
-// } else {
-//     controls.classList.add('active');
-//     detailsPanel.classList.add('active');
-// }
-
-
-// videoPlayer.addEventListener('touchstart', () => {
-//     controls.classList.add('active');
-//     detailsPanel.classList.add('active');
-
-//     setTimeout(() => {
-//         controls.classList.remove('active');
-//         detailsPanel.classList.remove('active');
-//         if (tracks.length != 0) {
-//             captionText.classList.remove('active');
-//         }
-//     }, 8000);
-// });
-
-
-// videoPlayer.addEventListener('touchmove', () => {
-//     if (videoPlayer.classList.contains('pause')) {
-//         controls.classList.remove('active');
-//         detailsPanel.classList.remove('active');
-//         if (tracks.length != 0) {
-//             captionText.classList.add('active');
-//         }
-//     } else {
-//         controls.classList.add('active');
-//         detailsPanel.classList.add('active');
-//     }
-// });
 
 
 var thumbnails = [];
