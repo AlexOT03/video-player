@@ -52,7 +52,7 @@ section {
         width: 100%;
         height: auto;
         padding: 15px 25px;
-        background: linear-gradient(to bottom, #000000ef 35%, transparent);
+        background: linear-gradient(to bottom, #000000ac 35%, transparent);
         transform: translateY(-100%);
         transition: .3s;
         z-index: 2;
@@ -62,12 +62,14 @@ section {
             font-weight: 300;
             margin-bottom: 1px;
             color: white;
+            pointer-events: none;
         }
 
         & span {
             font-size: 12px;
             font-weight: 200;
             color: #c7c7c7;
+            pointer-events: none;
         }
     }
 
@@ -171,7 +173,7 @@ section {
 
             & .progress-bar {
                 position: relative;
-                width: 100px;
+                width: 0;
                 height: inherit;
                 background: #1CC0C0;
                 border-radius: inherit;
@@ -435,7 +437,7 @@ section {
         }
     }
 
-    .volume, .volume-range, .picture-in-picture {
+    .fast-rewind, .fast-forward, .volume, .volume-range, .picture-in-picture {
         display: none;
     }
 }
