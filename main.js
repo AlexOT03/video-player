@@ -480,76 +480,107 @@ mainVideo.addEventListener('contextmenu', (e) => {
 });
 
 
-videoPlayer.addEventListener('mouseenter', () => {
-    controls.classList.add('active');
-    detailsPanel.classList.add('active');
-    if (tracks.length != 0) {
-        captionText.classList.remove('active');
-    }
-});
-
-
-videoPlayer.addEventListener('mouseleave', () => {
-    if (videoPlayer.classList.contains('pause')) {
-        if (settingsBtn.classList.contains('active') || captionsBtn.classList.contains('active')) {
-            controls.classList.add('active');
-            detailsPanel.classList.add('active');
-        } else {
-            controls.classList.remove('active');
-            detailsPanel.classList.remove('active');
-            if (tracks.length != 0) {
-                captionText.classList.add('active');
+let timer;
+function hideControls () {
+    if (mainVideo.paused) return;
+        timer = setTimeout(() => {
+            if (settingsBtn.classList.contains("active") || captionsBtn.classList.contains("active")) {
+                controls.classList.add("active");
+                detailsPanel.classList.add("active");
+            } else {
+                controls.classList.remove("active");
+                detailsPanel.classList.remove("active");
+                if (tracks.length != 0) {
+                    captionText.classList.add("active");
+                }
             }
-        }
-    } else {
-        controls.classList.add('active');
-        detailsPanel.classList.add('active');
-    }
-});
-
-if (videoPlayer.classList.contains('pause')) {
-    if (settingsBtn.classList.contains('active') || captionsBtn.classList.contains('active')) {
-        controls.classList.add('active');
-        detailsPanel.classList.add('active');
-    } else {
-        controls.classList.remove('active');
-        detailsPanel.classList.remove('active');
-        if (tracks.length != 0) {
-            captionText.classList.add('active');
-        }
-    }
-} else {
-    controls.classList.add('active');
-    detailsPanel.classList.add('active');
+    }, 1000);
 }
 
+hideControls();
 
-videoPlayer.addEventListener('touchstart', () => {
-    controls.classList.add('active');
-    detailsPanel.classList.add('active');
+videoPlayer.addEventListener("mousemove", () => {
 
-    setTimeout(() => {
-        controls.classList.remove('active');
-        detailsPanel.classList.remove('active');
-        if (tracks.length != 0) {
-            captionText.classList.remove('active');
-        }
-    }, 8000);
-});
-
-
-videoPlayer.addEventListener('touchmove', () => {
-    if (videoPlayer.classList.contains('pause')) {
-        controls.classList.remove('active');
-        detailsPanel.classList.remove('active');
-        if (tracks.length != 0) {
-            captionText.classList.add('active');
-        }
-    } else {
-        controls.classList.add('active');
-        detailsPanel.classList.add('active');
+    controls.classList.add("active");
+    detailsPanel.classList.add("active");
+    if (tracks.length != 0) {
+      captionText.classList.remove("active");
     }
+    clearTimeout(timer);
+    hideControls();
 });
+
+
+// videoPlayer.addEventListener('mouseenter', () => {
+//     controls.classList.add('active');
+//     detailsPanel.classList.add('active');
+//     if (tracks.length != 0) {
+//         captionText.classList.remove('active');
+//     }
+// });
+
+
+// videoPlayer.addEventListener('mouseleave', () => {
+//     if (videoPlayer.classList.contains('pause')) {
+//         if (settingsBtn.classList.contains('active') || captionsBtn.classList.contains('active')) {
+//             controls.classList.add('active');
+//             detailsPanel.classList.add('active');
+//         } else {
+//             controls.classList.remove('active');
+//             detailsPanel.classList.remove('active');
+//             if (tracks.length != 0) {
+//                 captionText.classList.add('active');
+//             }
+//         }
+//     } else {
+//         controls.classList.add('active');
+//         detailsPanel.classList.add('active');
+//     }
+// });
+
+// if (videoPlayer.classList.contains('pause')) {
+//     if (settingsBtn.classList.contains('active') || captionsBtn.classList.contains('active')) {
+//         controls.classList.add('active');
+//         detailsPanel.classList.add('active');
+//     } else {
+//         controls.classList.remove('active');
+//         detailsPanel.classList.remove('active');
+//         if (tracks.length != 0) {
+//             captionText.classList.add('active');
+//         }
+//     }
+// } else {
+//     controls.classList.add('active');
+//     detailsPanel.classList.add('active');
+// }
+
+
+// videoPlayer.addEventListener('touchstart', () => {
+//     controls.classList.add('active');
+//     detailsPanel.classList.add('active');
+
+//     setTimeout(() => {
+//         controls.classList.remove('active');
+//         detailsPanel.classList.remove('active');
+//         if (tracks.length != 0) {
+//             captionText.classList.remove('active');
+//         }
+//     }, 8000);
+// });
+
+
+// videoPlayer.addEventListener('touchmove', () => {
+//     if (videoPlayer.classList.contains('pause')) {
+//         controls.classList.remove('active');
+//         detailsPanel.classList.remove('active');
+//         if (tracks.length != 0) {
+//             captionText.classList.add('active');
+//         }
+//     } else {
+//         controls.classList.add('active');
+//         detailsPanel.classList.add('active');
+//     }
+// });
 
 
 var thumbnails = [];
