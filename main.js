@@ -41,15 +41,6 @@ if (tracks.length != 0) {
 
 const captionTracks = captions.querySelectorAll('ul li');
 
-// mainVideo.addEventListener('loadeddata', () => {
-//     setInterval(() => {
-//         let bufferedTime = mainVideo.buffered.end(0);
-//         let duration = mainVideo.duration;
-//         let widthVal = (bufferedTime / duration) * 100;
-//         bufferedProgressBar.style.width = `${widthVal}%`;
-//     }, 500);
-// });
-
 
 function playVideo() {
     playPause.classList.remove('ti-repeat');
@@ -482,19 +473,19 @@ mainVideo.addEventListener('contextmenu', (e) => {
 let timer;
 function hideControls () {
     if (mainVideo.paused) return;
-        timer = setTimeout(() => {
-            if (settingsBtn.classList.contains("active") || captionsBtn.classList.contains("active")) {
-                mainVideo.classList.remove("hide-mouse");
-                controls.classList.add("active");
-                detailsPanel.classList.add("active");
-            } else {
-                mainVideo.classList.add("hide-mouse");
-                controls.classList.remove("active");
-                detailsPanel.classList.remove("active");
-                if (tracks.length != 0) {
-                    captionText.classList.add("active");
-                }
+    timer = setTimeout(() => {
+        if (settingsBtn.classList.contains("active") || captionsBtn.classList.contains("active")) {
+            mainVideo.classList.remove("hide-mouse");
+            controls.classList.add("active");
+            detailsPanel.classList.add("active");
+        } else {
+            mainVideo.classList.add("hide-mouse");
+            controls.classList.remove("active");
+            detailsPanel.classList.remove("active");
+            if (tracks.length != 0) {
+                captionText.classList.add("active");
             }
+        }
     }, 1000);
 }
 
